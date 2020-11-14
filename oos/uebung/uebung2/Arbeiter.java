@@ -1,4 +1,4 @@
-package uebung.uebung2;
+package oos.uebung.uebung2;
 
 public class Arbeiter extends Mitarbeiter {
     double studenLohn;

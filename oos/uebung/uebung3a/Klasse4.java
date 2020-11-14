@@ -1,4 +1,4 @@
-package uebung.uebung3a;
+package oos.uebung.uebung3a;
 //class Klasse4 extends NurSelbst{
 class Klasse4{
 

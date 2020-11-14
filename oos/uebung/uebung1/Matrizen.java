@@ -1,4 +1,4 @@
-package uebung.uebung1;
+package oos.uebung.uebung1;
 
 public class Matrizen<i> {
     public static void main(String[] args){

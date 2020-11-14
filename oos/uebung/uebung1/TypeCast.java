@@ -1,4 +1,4 @@
-package uebung.uebung1;
+package oos.uebung.uebung1;
 
 public class TypeCast {
     public static void main(String[] args){

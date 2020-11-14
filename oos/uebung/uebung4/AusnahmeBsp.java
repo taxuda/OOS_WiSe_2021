@@ -1,4 +1,4 @@
-package uebung.uebung4;
+package oos.uebung.uebung4;
 
 public class AusnahmeBsp {
     int att;
@@ -6,7 +6,7 @@ public class AusnahmeBsp {
         AusnahmeBsp ausnahmeBsp = null;
         ausnahmeBsp.att = 1;
     }
-    public static void main(String[] args){
+    public static void Main(String[] args){
         try {
             AusnahmeBsp ab = new AusnahmeBsp();
             ab.nullpointer();

@@ -1,4 +1,4 @@
-package uebung.uebung2;
+package oos.uebung.uebung2;
 
 abstract class Mitarbeiter {
     //gemeinsame Attribute

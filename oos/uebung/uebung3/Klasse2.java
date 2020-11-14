@@ -1,4 +1,4 @@
-package uebung.uebung3;
+package oos.uebung.uebung3;
 
 public class Klasse2 {
     public int pblic;

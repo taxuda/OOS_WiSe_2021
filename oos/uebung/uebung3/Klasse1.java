@@ -1,4 +1,4 @@
-package uebung.uebung3;
+package oos.uebung.uebung3;
 
 //wenn pakage-Befehl in Klasse1 gelöscht ist,
 // Klasse1 kann Klasse 2 und Klass3 nicht zugreifen.

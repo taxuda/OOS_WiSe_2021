@@ -1,4 +1,4 @@
-package uebung.uebung4;
+package oos.uebung.uebung4;
 
 public class Exceptions {
     public static void main (String[] args) {

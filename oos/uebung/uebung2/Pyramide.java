@@ -1,11 +1,12 @@
-package uebung.uebung2;
+package oos.uebung.uebung2;
 
-public class Quader implements Körper {
+public class Pyramide implements Körper {
     int länge;
     int breite;
     int höhe;
-    Quader(){}
-    Quader(int l, int b, int h){
+
+    Pyramide(){}
+    Pyramide(int l, int b, int h){
         länge = l;
         breite = b;
         höhe = h;
@@ -24,9 +25,8 @@ public class Quader implements Körper {
     public int volumen(){
         return länge*breite*höhe;
     }
-
     public static void main(String[] args){
-        Quader quader = new Quader(5,6,7);
-        System.out.println(quader.volumen());
+        Pyramide pyramide = new Pyramide(5,6,7);
+        System.out.println(pyramide.volumen());
     }
 }

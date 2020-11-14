@@ -1,4 +1,4 @@
-package uebung.uebung2;
+package oos.uebung.uebung2;
 
 /**
  * Diese Klasse beschreibt einen (zwei-dimensionalen) Punkt und bietet Methoden zur Erzeugung eines
