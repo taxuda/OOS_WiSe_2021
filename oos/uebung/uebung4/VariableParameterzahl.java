@@ -9,7 +9,7 @@ public class VariableParameterzahl {
      */
     static String konkatenation(String... eingabe) throws IllegalArgumentException{
         String ausgabe = "";
-        if(eingabe.length == 1){
+        if(eingabe.length < 2){ // < 2 vi truong hop khong co parameter cung la truong hop loi
             throw new IllegalArgumentException("bitte geben mehr als ein Argument zur diesen Methode ein!");
         }
         else {
@@ -26,7 +26,6 @@ public class VariableParameterzahl {
             System.out.println(hello);
             System.out.println(hello2);
         }catch (IllegalArgumentException e){
-            System.out.println(e);
             e.printStackTrace();
         }
     }
