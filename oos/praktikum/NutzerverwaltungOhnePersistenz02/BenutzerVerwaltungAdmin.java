@@ -2,13 +2,15 @@ package oos.praktikum.NutzerverwaltungOhnePersistenz02;
 
 import java.util.ArrayList;
 
-public class BenutzerVerwaltungAdmin extends Benutzer implements BenutzerVerwaltung {
+public class BenutzerVerwaltungAdmin implements BenutzerVerwaltung {
 
     /**
-     * Datenhaltung: implementiert ArrayList als Datenstruktur um
-     * Benutzer-Objekt zu halten
+     * Datenhaltung: implementiert ArrayList als Datenstruktur
+     * um Benutzer-Objekt zu halten
+     * ? nen de la static hay la khong
      */
-    private static ArrayList<Benutzer> Datenhaltung = new ArrayList<Benutzer>();
+    private ArrayList<Benutzer> Datenhaltung = new ArrayList<>();
+
 
    /**
     * Konstruktor um ein BenutzerVerwaltungAdmin-Objekt zu erstellen
@@ -16,23 +18,26 @@ public class BenutzerVerwaltungAdmin extends Benutzer implements BenutzerVerwalt
     * @param id userID des Adminkonto
     * @param pw passwort des Adminkonto
     */
+    /*
    BenutzerVerwaltungAdmin(String id, char[] pw){
        super(id,pw);
    }
+    */
 
     /**
      * Eintragen ein Benutzerobjekt in die Datenhaltung.
      * @param benutzer das Benutzerobjekt, das in der Datenhaltung eingetragen wird.
      */
-   public void benutzerEintragen(Benutzer benutzer){
+   public void benutzerEintragen(Benutzer benutzer) throws BenutzerVerwaltungException{
        try{
            if(benutzerVorhanden(benutzer)){
-               throw new ParameterDuplikat("Parameter ist vorhanden! Bitte eintragen einen neuen Benutzer");
+               throw new BenutzerVerwaltungException("Benutzer ist schon vorhanden!");
            }
-           Datenhaltung.add(benutzer);
-       }
-       catch(ParameterDuplikat e){
-           e.printStackTrace();
+           else{
+               Datenhaltung.add(benutzer);
+           }
+       }catch (NumberFormatException e){
+           throw e;
        }
    }
 
@@ -45,40 +50,50 @@ public class BenutzerVerwaltungAdmin extends Benutzer implements BenutzerVerwalt
      * @param benutzer das Benutzerobjekt, das aus der Datenhaltung entfernt wird.
      *
      */
-   protected void benutzerLoeschen(Benutzer benutzer){
+   public void benutzerLoeschen(Benutzer benutzer) throws BenutzerVerwaltungException{
        try{
            if(Datenhaltung.isEmpty()){
-               throw new NullPointerException("Datenhaltung ist leer!");
+               throw new NullPointerException("Es gibt keinen Benutzer zum Löschen!");
            }
-           else if(!benutzerVorhanden(benutzer)){
-               throw new NullPointerException("Benutzer ist nicht vorhanden! Kann nicht loeschen!");
+           else{
+               if(!benutzerVorhanden(benutzer)){
+                   throw new BenutzerVerwaltungException("Benutzer ist nicht vorhanden! Kann nicht loeschen!");
+               }else{
+                   Datenhaltung.remove(benutzer);
+               }
            }
-           Datenhaltung.remove(benutzer);
+
        }
-       catch(NullPointerException e){
-           e.printStackTrace();
+       catch(NumberFormatException e){
+           throw e;
        }
    }
 
     /**
      * Überprüfen ob ein Objekt schon in der Datenhaltung vorhanden ist.
-     * @param benutzer Objekt von Benutzerklasse, das überprüft wird, ob es vorhanden ist.
-     * @return true, falls das Parameterobjekt in der Datenhaltung vorhanden ist, sonst false
+     * @param benutzer Parameterobjekt der Klasse Benutzer, das überprüft wird, ob vorhanden ist.
+     * @return true, falls dieses Parameterobjekt in der Datenhaltung vorhanden ist,
+     * sonst false
      */
-   public boolean benutzerVorhanden(Benutzer benutzer){
+   public boolean benutzerVorhanden(Benutzer benutzer) throws NumberFormatException{
         boolean vorhanden = false;
-        for(int i = 0; i < Datenhaltung.size(); i++){
-            /*
-            //userID must eindeutig sein!
-            if(benutzer.userID == Datenhaltung.get(i).userID){
-                vorhanden = true;
-                break;
+        //Durchsuchen alle Elemente der Datenhaltung mit for Schleife
+        try {
+            for (int i = 0; i < Datenhaltung.size(); i++) {
+                //userID must eindeutig sein!
+
+                //vergleichen zuerst die userID
+                if (benutzer.hashCode() == Datenhaltung.get(i).hashCode()) {
+
+                    if (benutzer.equals(Datenhaltung.get(i))) {
+                        vorhanden = true;
+                        break;
+                    }
+                }
+
             }
-             */
-            if(benutzer.equals(Datenhaltung.get(i))){
-                vorhanden = true;
-                break;
-            }
+        }catch (NumberFormatException e){
+            throw new NumberFormatException("userId von Parameterobjekt darf nur Zahlen enthalten!");
         }
         return vorhanden;
    }
