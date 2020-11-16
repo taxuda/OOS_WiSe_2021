@@ -2,16 +2,17 @@ package oos.praktikum.NutzerverwaltungOhnePersistenz02;
 
 public class Test {
     public static void main(String[] args){
+        //Benutzer - Test
+        System.out.println("Benutzer - Test");
+        System.out.println();
+
         Benutzer benutzer0 = null;
         Benutzer benutzer1 = new Benutzer("benutzer1", new char[]{'a','b','c','d'});
         Benutzer benutzer1_1 = new Benutzer("benutzer1", new char[]{'a','b','c','d'});
         Benutzer benutzer2 = new Benutzer("benutzer2", new char[]{'a','b','c','d'});
         BenutzerVerwaltungAdmin admin = new BenutzerVerwaltungAdmin();
 
-
-        //Benutzer - Test
-        System.out.println("Benutzer - Test");
-            //toString - Test
+        //toString - Test
         System.out.println("toTring - Test");
         System.out.println(benutzer0);
         System.out.println(benutzer1);
@@ -20,7 +21,7 @@ public class Test {
         System.out.println(admin);
         System.out.println();
 
-            //equals - Test
+        //equals - Test
         System.out.println("equals - Test");
         if(benutzer1.equals(benutzer1_1))
             System.out.println("?benutzer1 equals benutzer1_1 : " + "true");
@@ -33,40 +34,113 @@ public class Test {
 
         //benutzerEintragen - Test
         System.out.println("benutzerEintragen - Test");
-        /*
-        //test falsche Format von userID eintragen.
         try {
-            admin.benutzerEintragen(benutzer1);
-        }catch (BenutzerVerwaltungException e){
+            admin.benutzerEintragen(new Benutzer("001", "password".toCharArray()));
+            admin.benutzerEintragen(new Benutzer("002", "p4ssword".toCharArray()));
+            admin.benutzerEintragen(new Benutzer("003", "p455word".toCharArray()));
+            admin.benutzerEintragen(new Benutzer("004", "p455vvord".toCharArray()));
+            admin.benutzerEintragen(new Benutzer("005", "p455vv0rd".toCharArray()));
+
+            System.out.println("add a userID twice to trigger Duplikat exception: ");
+            admin.benutzerEintragen(new Benutzer("004", "p455vvodrd".toCharArray()));
+        } catch (BenutzerVerwaltungAdmin.BenutzereingabeDuplikatException e) {
             e.printStackTrace();
+        } catch (Benutzer.InvalidUserId e1) {
+            e1.printStackTrace();
+        } catch (Benutzer.InvalidPasswort e2) {
+            e2.printStackTrace();
         }
-         */
 
+        System.out.println("trigger the invalid userId exception: ");
+        try {
+            //admin.benutzerEintragen(null);
+            //admin.benutzerEintragen(new Benutzer("", "password".toCharArray()));
+            admin.benutzerEintragen(new Benutzer("haha", "password".toCharArray()));
+        } catch (BenutzerVerwaltungAdmin.BenutzereingabeDuplikatException e) {
+            e.printStackTrace();
+        } catch (Benutzer.InvalidUserId e1) {
+            e1.printStackTrace();
+        } catch (Benutzer.InvalidPasswort e2) {
+            e2.printStackTrace();
+        }
 
-        Benutzer user1 = new Benutzer("001", new char[]{'a','b','c','d'});
-        Benutzer user2 = new Benutzer("002", new char[]{'a','b','c','d'});
-        Benutzer user1_1 = new Benutzer("001", new char[]{'a','b','c','d'});
+        System.out.println("trigger short password exception:");
+        try {
+            admin.benutzerEintragen(new Benutzer("006", "1234".toCharArray()));
+        }catch (BenutzerVerwaltungAdmin.BenutzereingabeDuplikatException e) {
+            e.printStackTrace();
+        } catch (Benutzer.InvalidUserId e1) {
+            e1.printStackTrace();
+        } catch (Benutzer.InvalidPasswort e2) {
+            e2.printStackTrace();
+        }
+
+        //benutzerVorhanden-Test
+        System.out.println();
+        System.out.println("benutzerVorhanden - Test");
         try{
-            admin.benutzerEintragen(user1);
-            admin.benutzerEintragen(user2);
-            //test duplikat von userID
-            //admin.benutzerEintragen(user1_1);
-        }catch(BenutzerVerwaltungException e){
+            Benutzer user005 = new Benutzer("005", "p455vv0rd".toCharArray());
+            Benutzer user006 = new Benutzer("006", "p455vv0rd".toCharArray());
+
+            if(admin.benutzerVorhanden(user005))
+                System.out.println("user005 mit userID 005 ist vorhanden.");
+
+            if(!admin.benutzerVorhanden(user006))
+                System.out.println("user006 mit userID 006 ist NICHT vorhanden.");
+        }catch (Benutzer.InvalidUserId e){
             e.printStackTrace();
         }
+
+        try{
+            System.out.println("trigger invalid user input");
+            Benutzer userHAHA = new Benutzer("haha", "p455vv0rd".toCharArray());
+            admin.benutzerVorhanden(userHAHA);
+        }catch (Benutzer.InvalidUserId e){
+            e.printStackTrace();
+        }
+
+
 
         //benutzerLöschen-Test
+        System.out.println();
+        System.out.println("benutzerLöschen - Test");
         try {
-            admin.benutzerLoeschen(user1);
-            //admin.benutzerLoeschen(user1_1);
-            admin.benutzerLoeschen(benutzer1);
-            admin.benutzerLoeschen(user2);
-            //admin.benutzerLoeschen(user2);
-        }catch (BenutzerVerwaltungException e){
+            System.out.println("trigger delete a invalid userID: ");
+            admin.benutzerLoeschen(new Benutzer("001", "password".toCharArray()));
+            admin.benutzerLoeschen(new Benutzer("002", "p4ssword".toCharArray()));
+            admin.benutzerLoeschen(new Benutzer("003", "p455word".toCharArray()));
+            admin.benutzerLoeschen(new Benutzer("004", "p455vvord".toCharArray()));
+            //delete an invalid userID
+            admin.benutzerLoeschen(new Benutzer("haha", "password".toCharArray()));
+            admin.benutzerLoeschen(new Benutzer("005", "p455vv0rd".toCharArray()));
+        }catch (Benutzer.InvalidUserId e){
             e.printStackTrace();
-        }catch (NullPointerException e1){
+        }catch (BenutzerVerwaltungAdmin.EmptyDatenhaltungException e1){
             e1.printStackTrace();
-        }catch (NumberFormatException e2){
+        }catch (BenutzerVerwaltungAdmin.BenutzerNichtVorhandenException e2){
+            e2.printStackTrace();
+        }
+
+        try {
+            System.out.println("trigger delete of nonexistent users: ");
+            admin.benutzerLoeschen(new Benutzer("006", "p455vv0rd".toCharArray()));
+        }catch (Benutzer.InvalidUserId e){
+            e.printStackTrace();
+        }catch (BenutzerVerwaltungAdmin.EmptyDatenhaltungException e1){
+            e1.printStackTrace();
+        }catch (BenutzerVerwaltungAdmin.BenutzerNichtVorhandenException e2){
+            e2.printStackTrace();
+        }
+
+        try {
+            System.out.println("trigger delete when data container is empty: ");
+            admin.benutzerLoeschen(new Benutzer("005", "p455vv0rd".toCharArray()));
+            admin.benutzerLoeschen(new Benutzer("005", "p455vv0rd".toCharArray()));
+        }catch (Benutzer.InvalidUserId e){
+            e.printStackTrace();
+        }catch (BenutzerVerwaltungAdmin.EmptyDatenhaltungException e1){
+            e1.printStackTrace();
+        }catch (BenutzerVerwaltungAdmin.BenutzerNichtVorhandenException e2){
             e2.printStackTrace();
         }
     }

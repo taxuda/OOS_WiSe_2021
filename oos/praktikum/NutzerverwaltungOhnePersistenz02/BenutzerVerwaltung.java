@@ -5,7 +5,11 @@ public interface BenutzerVerwaltung {
      * Diese Methode eintragt Parameterobjekt in eine Datenhaltung.
      * @param benutzer wird in eine Datenhaltung eingetragen.
      */
-    void benutzerEintragen(Benutzer benutzer) throws BenutzerVerwaltungException;
+    void benutzerEintragen(Benutzer benutzer)
+            throws Benutzer.InvalidUserId,
+            Benutzer.InvalidPasswort,
+            BenutzerVerwaltungAdmin.BenutzereingabeDuplikatException;
+
 
     /**
      * Diese Methode überprüft, ob das Parameterobjekt
@@ -14,5 +18,5 @@ public interface BenutzerVerwaltung {
      * @return true, falls das Parameterobjekt in der Datenhaltung vorhanden ist
      * sonst false.
      */
-    boolean benutzerVorhanden(Benutzer benutzer) throws NumberFormatException;
+    boolean benutzerVorhanden(Benutzer benutzer) throws Benutzer.InvalidUserId;
 }

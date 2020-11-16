@@ -11,90 +11,123 @@ public class BenutzerVerwaltungAdmin implements BenutzerVerwaltung {
      */
     private ArrayList<Benutzer> Datenhaltung = new ArrayList<>();
 
-
-   /**
-    * Konstruktor um ein BenutzerVerwaltungAdmin-Objekt zu erstellen
-    * @see Benutzer wenden hier Konstruktor von Benutzer-Klasse an
-    * @param id userID des Adminkonto
-    * @param pw passwort des Adminkonto
-    */
-    /*
-   BenutzerVerwaltungAdmin(String id, char[] pw){
-       super(id,pw);
-   }
-    */
+    /**
+     * Überprüfen, ob die userId von benutzer gültig ist.
+     * @param benutzer ,benutzer.userID überprüft wird.
+     * @return true, falls userID das richtige Format hat;
+     * sonst falsch.
+     */
+    public boolean invalidUserId(Benutzer benutzer){
+        return ((benutzer.userID == null) ||
+                (benutzer.userID.length() == 0) ||
+                !benutzer.userID.matches("[0-9]+"));
+    }
 
     /**
-     * Eintragen ein Benutzerobjekt in die Datenhaltung.
-     * @param benutzer das Benutzerobjekt, das in der Datenhaltung eingetragen wird.
+     *Überprüfen, ob das Passwort von benutzer gültig ist.
+     * @param benutzer, benutzer.passwort überprüft wird.
+     * @return true, falls passwort nicht leer ist und mehr als 5 Zeichen enthält;
+     * sonst, falsch
      */
-   public void benutzerEintragen(Benutzer benutzer) throws BenutzerVerwaltungException{
-       try{
-           if(benutzerVorhanden(benutzer)){
-               throw new BenutzerVerwaltungException("Benutzer ist schon vorhanden!");
-           }
-           else{
-               Datenhaltung.add(benutzer);
-           }
-       }catch (NumberFormatException e){
-           throw e;
-       }
-   }
+    public boolean invalidUserPassword(Benutzer benutzer){
+        return ((benutzer.passwort == null) || (benutzer.passwort.length <= 5));
+    }
 
     /**
-     * Entfernen ein Objekt aus der Datenhaltung.
-     * Fallunterscheidung:
-     * Datenhaltung is empty,
-     * Parameterobjekt ist nicht in der Datenhaltung vorhanden,
-     * Parameterobjekt ist vorhanden, wird entfernt.
-     * @param benutzer das Benutzerobjekt, das aus der Datenhaltung entfernt wird.
-     *
+     * Diese Methode trägt den gültigen Benutzereingabe in Datenhaltung ein.
+     * @param benutzer wird in eine Datenhaltung eingetragen.
+     * @throws Benutzer.InvalidUserId
+     * @throws Benutzer.InvalidPasswort
+     * @throws BenutzereingabeDuplikatException
      */
-   public void benutzerLoeschen(Benutzer benutzer) throws BenutzerVerwaltungException{
-       try{
-           if(Datenhaltung.isEmpty()){
-               throw new NullPointerException("Es gibt keinen Benutzer zum Löschen!");
-           }
-           else{
-               if(!benutzerVorhanden(benutzer)){
-                   throw new BenutzerVerwaltungException("Benutzer ist nicht vorhanden! Kann nicht loeschen!");
-               }else{
-                   Datenhaltung.remove(benutzer);
-               }
-           }
+   public void benutzerEintragen(Benutzer benutzer)
+           throws Benutzer.InvalidUserId,
+           Benutzer.InvalidPasswort,
+           BenutzereingabeDuplikatException{
 
+       if(invalidUserId(benutzer))
+           throw new Benutzer.InvalidUserId("UserId darf nicht leer sein und " +
+                   "muss nur Zahlen enthalten!");
+
+       if(invalidUserPassword(benutzer))
+           throw new Benutzer.InvalidPasswort("Passwort darf nicht leer sein und " +
+                   "muss mehr als 5 Zeichen enthalten!");
+
+       if(benutzerVorhanden(benutzer)){
+           throw new BenutzereingabeDuplikatException("Benutzer ist schon vorhanden!");
        }
-       catch(NumberFormatException e){
-           throw e;
-       }
+
+       Datenhaltung.add(benutzer);
    }
 
     /**
-     * Überprüfen ob ein Objekt schon in der Datenhaltung vorhanden ist.
-     * @param benutzer Parameterobjekt der Klasse Benutzer, das überprüft wird, ob vorhanden ist.
-     * @return true, falls dieses Parameterobjekt in der Datenhaltung vorhanden ist,
-     * sonst false
+     * Diese Methode löscht den gültigen Benutzer aus der Datenhaltung
+     * @param benutzer, wenn gültig ist, wird gelöscht.
+     * @throws EmptyDatenhaltungException
+     * @throws BenutzerNichtVorhandenException
+     * @throws Benutzer.InvalidUserId
      */
-   public boolean benutzerVorhanden(Benutzer benutzer) throws NumberFormatException{
+   public void benutzerLoeschen(Benutzer benutzer)
+           throws EmptyDatenhaltungException,
+           BenutzerNichtVorhandenException ,
+           Benutzer.InvalidUserId {
+       if(invalidUserId(benutzer))
+           throw new Benutzer.InvalidUserId("Kann nicht einen ungültigen Benutzer löschen!");
+
+       if(Datenhaltung.isEmpty())
+           throw new EmptyDatenhaltungException("Es gibt keinen Benutzer zum Löschen!");
+
+       if(!benutzerVorhanden(benutzer))
+           throw new BenutzerNichtVorhandenException("Der eingegebenen Benutzer ist nicht vorhanden zum Löschen!");
+
+       Datenhaltung.remove(benutzer);
+   }
+
+    /**
+     * Diese Methode überprüft,
+     * ob die gültige Benutzereingabe in der Datenhaltung vorhanden ist.
+     * @param benutzer suchen in der Datenhaltung nach der benutzer.userID.
+     * @return falls das Parameterobjekt in der Datenhaltung vorhanden ist;
+     * sonst falsch.
+     * @throws Benutzer.InvalidUserId ungültig Parameter
+     */
+   public boolean benutzerVorhanden(Benutzer benutzer) throws Benutzer.InvalidUserId {
         boolean vorhanden = false;
+
+        if(invalidUserId(benutzer))
+            throw new Benutzer.InvalidUserId("UserId darf nicht leer sein und " +
+                    "muss nur Zahlen enthalten!");
+
         //Durchsuchen alle Elemente der Datenhaltung mit for Schleife
-        try {
+        if(!Datenhaltung.isEmpty()){
             for (int i = 0; i < Datenhaltung.size(); i++) {
                 //userID must eindeutig sein!
-
-                //vergleichen zuerst die userID
                 if (benutzer.hashCode() == Datenhaltung.get(i).hashCode()) {
-
-                    if (benutzer.equals(Datenhaltung.get(i))) {
-                        vorhanden = true;
-                        break;
-                    }
+                    vorhanden = true;
+                    break;
                 }
-
             }
-        }catch (NumberFormatException e){
-            throw new NumberFormatException("userId von Parameterobjekt darf nur Zahlen enthalten!");
         }
         return vorhanden;
    }
+
+   //selbst definierte Fehlerklasse
+   public static class EmptyDatenhaltungException extends Exception{
+       EmptyDatenhaltungException(){}
+       EmptyDatenhaltungException(String ausgabe){
+           super(ausgabe);
+       }
+   }
+    public static class BenutzereingabeDuplikatException extends Exception{
+        BenutzereingabeDuplikatException(){}
+        BenutzereingabeDuplikatException(String ausgabe){
+            super(ausgabe);
+        }
+    }
+    public static class BenutzerNichtVorhandenException extends Exception{
+        BenutzerNichtVorhandenException(){}
+        BenutzerNichtVorhandenException(String ausgabe){
+            super(ausgabe);
+        }
+    }
 }

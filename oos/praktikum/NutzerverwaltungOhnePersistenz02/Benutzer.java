@@ -15,9 +15,10 @@ public class Benutzer {
 
     /**
      * Diese Methode ist als Überlagerung der gleichen Methode
-     * der Klasse Object zu implementieren
+     * equals(Object o) der Klasse Object zu implementieren
      * @param obj Objekt der Klasse Object
-     * @return true wenn this und obj identisch sind.
+     * @return true, falls this und obj identisch sind;
+     * sonst falsch.
      */
    @Override
     public boolean equals(Object obj){
@@ -61,11 +62,25 @@ public class Benutzer {
     /**
      * this method of class Benutzer override the Object toString() method
      * replace classname@HashCode_in_Hexadeciaml_form of the Object toString() method
-     * by using one string as output
-     * @return a String in form "UserID: userID; Passwort: passwort"
+     * by using the string as output
+     * @return String in form "UserID: userID; Passwort: passwort"
      */
     @Override
     public String toString(){
         return ("UserID: " + userID + " ;Passwort: " + String.copyValueOf(this.passwort));
+    }
+
+    //selbst definierte Fehlerklasse
+    public static class InvalidUserId extends Exception{
+        InvalidUserId(){}
+        InvalidUserId(String ausgabe){
+            super(ausgabe);
+        }
+    }
+    public static class InvalidPasswort extends Exception{
+        InvalidPasswort(){}
+        InvalidPasswort(String ausgabe){
+            super(ausgabe);
+        }
     }
 }
