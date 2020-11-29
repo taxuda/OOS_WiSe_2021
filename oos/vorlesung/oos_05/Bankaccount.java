@@ -1,6 +1,6 @@
 package oos.vorlesung.oos_05;
 import java.util.concurrent.ThreadLocalRandom;
-public class Bankaccount {
+public class Bankaccount{
     private float balance;
     private String name;
     private final long bankAccId;
@@ -12,8 +12,12 @@ public class Bankaccount {
     public void deposit (float amount){
         balance += amount;
     }
-    public void withdraw (float amount){
-        balance -= amount;
+    public void withdraw (float amount) throws NegativeKontostandException {
+        if(amount <= this.balance){
+            balance -= amount;
+        }else{
+            throw new NegativeKontostandException("Nicht genug Geld!");
+        }
     }
     public  float getBalance(){
         return  balance;
@@ -26,8 +30,9 @@ public class Bankaccount {
      * Die Methode transferiert Geld von einem auf ein anderes Konto
      * @param anders das andere Konto
      */
-    public void tranfer(float amount, Bankaccount anders){
+    public void tranfer(float amount, Bankaccount anders) throws NegativeKontostandException{
         this.withdraw(amount);
         anders.deposit(amount);
     }
+
 }
